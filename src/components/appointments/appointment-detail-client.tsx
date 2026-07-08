@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,7 @@ export default function AppointmentDetailClient({ appointmentId }: AppointmentDe
   const [error, setError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const fetchAppointment = async () => {
+  const fetchAppointment = useCallback(async () => {
     setIsLoading(true);
     setError('');
 
@@ -49,11 +49,11 @@ export default function AppointmentDetailClient({ appointmentId }: AppointmentDe
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [appointmentId]);
 
   useEffect(() => {
     fetchAppointment();
-  }, [appointmentId]);
+  }, [fetchAppointment]);
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this appointment?')) {
