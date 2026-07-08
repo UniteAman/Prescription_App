@@ -33,10 +33,6 @@ export default function AppointmentDetailClient({ appointmentId }: AppointmentDe
   const [error, setError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    fetchAppointment();
-  }, [appointmentId]);
-
   const fetchAppointment = async () => {
     setIsLoading(true);
     setError('');
@@ -54,6 +50,10 @@ export default function AppointmentDetailClient({ appointmentId }: AppointmentDe
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAppointment();
+  }, [appointmentId]);
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this appointment?')) {
