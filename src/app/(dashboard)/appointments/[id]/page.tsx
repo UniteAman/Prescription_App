@@ -1,13 +1,15 @@
 import AppointmentDetailClient from '@/components/appointments/appointment-detail-client';
 
-export default function AppointmentDetailPage({
+export default async function AppointmentDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+  
   return (
     <div className="container mx-auto p-6">
-      <AppointmentDetailClient appointmentId={params.id} />
+      <AppointmentDetailClient appointmentId={id} />
     </div>
   );
 }
