@@ -4,10 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { appointmentSchema } from '@/utils/validation';
 
 // GET /api/appointments/[id] - Get single appointment
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, context: any) {
+  const { params } = context;
   try {
     const session = await auth();
 
@@ -46,10 +44,8 @@ export async function GET(
 }
 
 // PUT /api/appointments/[id] - Update appointment
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, context: any) {
+  const { params } = context;
   try {
     const session = await auth();
 
@@ -107,10 +103,8 @@ export async function PUT(
 }
 
 // DELETE /api/appointments/[id] - Delete/cancel appointment
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request, context: any) {
+  const { params } = context;
   try {
     const session = await auth();
 

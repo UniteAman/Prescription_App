@@ -18,12 +18,22 @@ export default async function ProfilePage() {
 
   const profile = await getProfile(session.user.id);
 
+  const initialData = profile
+    ? {
+        fullName: profile.fullName,
+        phoneNumber: profile.phoneNumber,
+        age: profile.age,
+        gender: profile.gender,
+        address: profile.address,
+        emergencyContact: profile.emergencyContact,
+        medicalNotes: profile.medicalNotes ?? undefined,
+      }
+    : undefined;
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">My Profile</h1>
-      <ProfileFormClient 
-        initialData={profile || undefined}
-      />
+      <ProfileFormClient initialData={initialData} />
     </div>
   );
 }
