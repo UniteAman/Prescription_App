@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { profileSchema } from '@/utils/validation';
 
 // GET /api/profile - Fetch current user's profile
@@ -15,6 +14,7 @@ export async function GET() {
       );
     }
 
+    const { prisma } = await import('@/lib/prisma');
     const profile = await prisma.profile.findUnique({
       where: { userId: session.user.id },
     });
@@ -51,6 +51,7 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const validatedData = profileSchema.parse(body);
 
+    const { prisma } = await import('@/lib/prisma');
     const updatedProfile = await prisma.profile.update({
       where: { userId: session.user.id },
       data: {

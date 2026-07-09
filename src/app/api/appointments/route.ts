@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { appointmentSchema } from '@/utils/validation';
 
 // GET /api/appointments - List user's appointments with optional status filter
@@ -23,6 +22,7 @@ export async function GET(request: Request) {
       ...(status && { status: status as 'UPCOMING' | 'COMPLETED' | 'CANCELLED' }),
     };
 
+    const { prisma } = await import('@/lib/prisma');
     const appointments = await prisma.appointment.findMany({
       where,
       orderBy: { date: 'desc' },
@@ -56,6 +56,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = appointmentSchema.parse(body);
 
+    const { prisma } = await import('@/lib/prisma');
     const appointment = await prisma.appointment.create({
       data: {
         userId: session.user.id,

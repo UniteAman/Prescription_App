@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { registerSchema } from '@/utils/validation';
 
@@ -9,6 +8,8 @@ export async function POST(request: Request) {
 
     // Validate input
     const validatedData = registerSchema.parse(body);
+
+    const { prisma } = await import('@/lib/prisma');
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({

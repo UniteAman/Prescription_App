@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { appointmentSchema } from '@/utils/validation';
 
 // GET /api/appointments/[id] - Get single appointment
@@ -21,6 +20,7 @@ export async function GET(request: Request) {
       );
     }
 
+    const { prisma } = await import('@/lib/prisma');
     const appointment = await prisma.appointment.findFirst({
       where: {
         id,
@@ -69,6 +69,7 @@ export async function PUT(request: Request) {
     const validatedData = appointmentSchema.parse(body);
 
     // Verify ownership
+    const { prisma } = await import('@/lib/prisma');
     const existing = await prisma.appointment.findFirst({
       where: {
         id,
@@ -129,6 +130,7 @@ export async function DELETE(request: Request) {
     }
 
     // Verify ownership
+    const { prisma } = await import('@/lib/prisma');
     const existing = await prisma.appointment.findFirst({
       where: {
         id,
