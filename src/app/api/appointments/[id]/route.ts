@@ -4,8 +4,13 @@ import { prisma } from '@/lib/prisma';
 import { appointmentSchema } from '@/utils/validation';
 
 // GET /api/appointments/[id] - Get single appointment
-export async function GET(request: Request, context: any) {
-  const { params } = context;
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const id = url.pathname.split('/').filter(Boolean).pop();
+  if (!id) {
+    return NextResponse.json({ error: 'Invalid appointment id' }, { status: 400 });
+  }
+
   try {
     const session = await auth();
 
@@ -18,7 +23,7 @@ export async function GET(request: Request, context: any) {
 
     const appointment = await prisma.appointment.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
       include: {
@@ -44,8 +49,12 @@ export async function GET(request: Request, context: any) {
 }
 
 // PUT /api/appointments/[id] - Update appointment
-export async function PUT(request: Request, context: any) {
-  const { params } = context;
+export async function PUT(request: Request) {
+  const url = new URL(request.url);
+  const id = url.pathname.split('/').filter(Boolean).pop();
+  if (!id) {
+    return NextResponse.json({ error: 'Invalid appointment id' }, { status: 400 });
+  }
   try {
     const session = await auth();
 
@@ -62,7 +71,7 @@ export async function PUT(request: Request, context: any) {
     // Verify ownership
     const existing = await prisma.appointment.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -75,7 +84,7 @@ export async function PUT(request: Request, context: any) {
     }
 
     const updatedAppointment = await prisma.appointment.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         date: new Date(validatedData.date),
         time: validatedData.time,
@@ -103,8 +112,12 @@ export async function PUT(request: Request, context: any) {
 }
 
 // DELETE /api/appointments/[id] - Delete/cancel appointment
-export async function DELETE(request: Request, context: any) {
-  const { params } = context;
+export async function DELETE(request: Request) {
+  const url = new URL(request.url);
+  const id = url.pathname.split('/').filter(Boolean).pop();
+  if (!id) {
+    return NextResponse.json({ error: 'Invalid appointment id' }, { status: 400 });
+  }
   try {
     const session = await auth();
 
@@ -118,7 +131,7 @@ export async function DELETE(request: Request, context: any) {
     // Verify ownership
     const existing = await prisma.appointment.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -131,7 +144,7 @@ export async function DELETE(request: Request, context: any) {
     }
 
     await prisma.appointment.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Appointment deleted successfully' });
